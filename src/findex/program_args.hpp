@@ -36,6 +36,13 @@ namespace findex {
  */
 struct program_args
 {
+    spd::fsys::rx_directory_path target_directory_pth;
+    std::string sub_str;
+    std::string wildcrd;
+    std::string regx;
+    bool case_sensitve = false;
+    bool print_absolute_pth = false;
+    bool no_colrs = false;
 };
 
 

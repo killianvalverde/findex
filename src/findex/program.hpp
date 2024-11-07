@@ -55,6 +55,13 @@ public:
     int execute();
 
 private:
+    void print_path(const std::filesystem::path& pth) const;
+    
+    void print_path_with_highlighted_substring_match(const std::filesystem::path& pth) const;
+    
+    void print_path_with_highlighted_wildcard_match(const std::filesystem::path& pth) const;
+    
+    void print_path_with_highlighted_regex_match(const std::filesystem::path& pth) const;
 
 private:
     /** The program arguments. */
