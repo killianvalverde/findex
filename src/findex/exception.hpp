@@ -1,5 +1,5 @@
 /* findex
- * Copyright (C) 2025 Killian Valverde.
+ * Copyright (C) 2024 Killian Valverde.
  *
  * This file is part of findex.
  *
@@ -21,9 +21,9 @@
  * @file        exception.hpp
  * @brief       exception class header.
  * @author      Killian Valverde
- * @date        2025/08/02
+ * @date        2024/11/07
  */
-
+ 
 #pragma once
 
 #include <exception>

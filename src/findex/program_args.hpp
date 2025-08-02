@@ -1,5 +1,5 @@
 /* findex
- * Copyright (C) 2025 Killian Valverde.
+ * Copyright (C) 2024 Killian Valverde.
  *
  * This file is part of findex.
  *
@@ -21,10 +21,12 @@
  * @file        program_args.hpp
  * @brief       program_args struct header.
  * @author      Killian Valverde
- * @date        2025/08/02
+ * @date        2024/11/07
  */
 
 #pragma once
+
+#include <speed/speed.hpp>
 
 namespace findex {
 
@@ -33,6 +35,13 @@ namespace findex {
  */
 struct program_args
 {
+    spd::fsys::rx_directory_path dir_pth = ".";
+    std::string str;
+    bool wildcrd;
+    bool regx;
+    bool case_sensitve;
+    bool print_absolute_pth;
+    bool no_colrs;
 };
 
 }

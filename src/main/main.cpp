@@ -1,5 +1,5 @@
 /* findex
- * Copyright (C) 2025 Killian Valverde.
+ * Copyright (C) 2024 Killian Valverde.
  *
  * This file is part of findex.
  *
@@ -18,68 +18,75 @@
  */
 
 /**
- * @file        main.cpp
+ * @file        main.hpp
  * @brief       main entry point.
  * @author      Killian Valverde
- * @date        2025/08/02
+ * @date        2024/11/07
  */
 
+#define SPEED_CROSSPLATFORM_UNICODE_MAIN
 #include <speed/speed.hpp>
 
 #include "../findex/findex.hpp"
 
-/**
- * @brief       Entry point of the program.
- * @param       argc : Number of command-line arguments, including the program name.
- * @param       argv : Array of C-style strings representing the command-line arguments.
- * @return      Zero on successful execution, or a non-zero value on error.
- */
 int main(int argc, char* argv[])
 {
-    std::string messge;
-    int retv;
-    
-    try 
+    try
     {
         findex::program_args prog_args;
         spd::ap::arg_parser ap("findex");
         
         ap.add_help_menu()
                 .description("Search for files that match specified criteria.");
+
+        ap.add_positional_arg("SUB-STRING")
+                .description("Sub-string to search in the file names.")
+                .store_into(prog_args.str);
+
+        ap.add_positional_arg("DIR")
+                .description("Directory in which perform the operation.")
+                .store_into(prog_args.dir_pth)
+                .mandatory(false);
+
+        ap.add_key_arg("-w", "--wildcard")
+                .description("Filter files using the specified wildcard pattern. Only the '*' "
+                             "and '?' characters are supported.")
+                .store_presence(prog_args.wildcrd);
+
+        ap.add_key_arg("-x", "--regex")
+                .description("Filter files using the specified regex.")
+                .store_presence(prog_args.regx);
+
+        ap.add_key_arg("-s", "--case-sensitive")
+                .description("Enable case-sensitive search.")
+                .store_presence(prog_args.case_sensitve);
+
+        ap.add_key_arg("-a", "--absolute-path")
+                .description("Print the absolute path of the matching files.")
+                .store_presence(prog_args.print_absolute_pth);
+
+        ap.add_key_arg("-n", "--no-colors")
+                .description("Disable color output in print statements.")
+                .store_presence(prog_args.no_colrs);
                 
-        ap.add_help_arg("--help", "-h")
+        ap.add_help_arg("-h", "--help")
                 .description("Display this help and exit.");
                 
-        ap.add_version_arg("--version", "-v")
+        ap.add_version_arg("-v", "--version")
                 .description("Output version information and exit.")
-                .gplv3_version_information("0.0.0", "2025", "Killian Valverde");
-
+                .gplv3_version_information("0.0.0", "2024", "Killian Valverde");
+        
         ap.parse_args(argc, argv);
         
         findex::program prog(std::move(prog_args));
-                
         return prog.execute();
-    }
-    catch (const findex::exception_base& e)
-    {
-        messge = e.what();
-        retv = 1;
     }
     catch (const std::exception& e)
     {
-        messge = e.what();
-        retv = -1;
+        spd::ios::print_error_and_exit(std::cerr, "findex", e.what(), 1);
     }
     catch (...)
     {
-        messge = "Unknown error";
-        retv = -1;
+        spd::ios::print_error_and_exit(std::cerr, "findex", "Unknown error", 1);
     }
-    
-    std::cerr << spd::ios::newl
-              << spd::ios::set_light_red_text << "findex: "
-              << spd::ios::set_default_text << messge
-              << std::endl;
-
-    return retv;
 }

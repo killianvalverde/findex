@@ -1,5 +1,5 @@
 /* findex
- * Copyright (C) 2025 Killian Valverde.
+ * Copyright (C) 2024 Killian Valverde.
  *
  * This file is part of findex.
  *
@@ -21,21 +21,18 @@
  * @file        program.hpp
  * @brief       program class header.
  * @author      Killian Valverde
- * @date        2025/08/02
+ * @date        2024/11/07
  */
 
 #pragma once
 
-#include <speed/speed.hpp>
-
-#include "exception.hpp"
 #include "program_args.hpp"
 
+/**
+ * @brief       Contians all findex resources.
+ */
 namespace findex {
 
-/**
- * @brief       findex entry point class.
- */
 class program
 {
 public:
@@ -52,6 +49,13 @@ public:
     int execute();
 
 private:
+    void print_path(const std::filesystem::path& actual_pth) const;
+    
+    void print_path_with_highlighted_substring_match(const std::filesystem::path& pth) const;
+    
+    void print_path_with_highlighted_wildcard_match(const std::filesystem::path& pth) const;
+    
+    void print_path_with_highlighted_regex_match(const std::filesystem::path& pth) const;
 
 private:
     /** The program arguments. */
