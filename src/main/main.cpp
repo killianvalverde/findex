@@ -1,5 +1,5 @@
 /* ff
- * Copyright (C) 2024 Killian Valverde.
+ * Copyright (C) 2024-2025 Killian Valverde.
  *
  * This file is part of ff.
  *
