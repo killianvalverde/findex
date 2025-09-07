@@ -37,8 +37,9 @@ struct program_args
 {
     spd::fsys::rx_directory_path dir_pth = ".";
     std::string str;
-    bool wildcrd;
-    bool regx;
+    bool force_substr;
+    bool force_wildcrd;
+    bool force_regx;
     bool case_sensitve;
     bool print_absolute_pth;
     bool no_colrs;

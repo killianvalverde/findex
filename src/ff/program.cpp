@@ -40,13 +40,24 @@ int program::execute()
     auto directory_iteratn = spd::fsys::directory_iteration(prog_args_.dir_pth)
             .case_insensitive(!prog_args_.case_sensitve);
     
-    if (prog_args_.wildcrd)
+    if (prog_args_.force_substr)
+    {
+        directory_iteratn.substring_to_match(prog_args_.str);
+    }
+    else if (prog_args_.force_wildcrd)
     {
         directory_iteratn.wildcard_to_match(prog_args_.str);
+        colorize_file_nme_ = true;
     }
-    else if (prog_args_.regx)
+    else if (prog_args_.force_regx || is_regex(prog_args_.str))
     {
         directory_iteratn.regex_to_match(prog_args_.str);
+        colorize_file_nme_ = true;
+    }
+    else if (is_wildcard(prog_args_.str))
+    {
+        directory_iteratn.wildcard_to_match(prog_args_.str);
+        colorize_file_nme_ = true;
     }
     else
     {
@@ -69,27 +80,41 @@ int program::execute()
     return 0;
 }
 
+bool program::is_wildcard(const std::string& str) const noexcept
+{
+    return std::ranges::any_of(str, [](char c)
+    {
+        return c == '*' || c == '?';
+    });
+}
+
+bool program::is_regex(const std::string& str) const noexcept
+{
+    if (str.length() <= 1)
+    {
+        return false;
+    }
+    
+    return str.at(0) == '^' && str.at(str.length() - 1) == '$';
+}
+
 void program::print_path(const std::filesystem::path& pth) const
 {
     if (prog_args_.no_colrs)
     {
         std::cout << spd::cast::type_cast<std::string>(pth) << std::endl;
     }
-    else if (prog_args_.wildcrd)
+    else if (colorize_file_nme_)
     {
-        print_path_with_highlighted_wildcard_match(pth);
-    }
-    else if (prog_args_.regx)
-    {
-        print_path_with_highlighted_regex_match(pth);
+        print_path_with_highlighted_file_name(pth);
     }
     else
     {
-        print_path_with_highlighted_substring_match(pth);
+        print_path_with_highlighted_substring(pth);
     }
 }
 
-void program::print_path_with_highlighted_substring_match(const std::filesystem::path &pth) const
+void program::print_path_with_highlighted_substring(const std::filesystem::path &pth) const
 {
     auto raw_filenme = spd::cast::type_cast<std::string>(pth.filename());
     std::string filenme;
@@ -124,7 +149,7 @@ void program::print_path_with_highlighted_substring_match(const std::filesystem:
     std::cout << raw_filenme.substr(cur_pos) << std::endl;
 }
 
-void program::print_path_with_highlighted_wildcard_match(const std::filesystem::path &pth) const
+void program::print_path_with_highlighted_file_name(const std::filesystem::path &pth) const
 {
     std::cout << spd::cast::type_cast<std::string>(pth.parent_path())
               << SPEED_PATH_SEPARATOR_CHAR
@@ -132,11 +157,6 @@ void program::print_path_with_highlighted_wildcard_match(const std::filesystem::
               << spd::cast::type_cast<std::string>(pth.filename())
               << spd::ios::set_default_text
               << spd::ios::newl;
-}
-
-void program::print_path_with_highlighted_regex_match(const std::filesystem::path &pth) const
-{
-    print_path_with_highlighted_wildcard_match(pth);
 }
 
 }

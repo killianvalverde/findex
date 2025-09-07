@@ -48,16 +48,19 @@ int main(int argc, char* argv[])
                 .store_into(prog_args.dir_pth)
                 .mandatory(false);
 
+        ap.add_key_arg("-s", "--sub-string")
+                .description("Enforce the sub string filter.")
+                .store_presence(prog_args.force_substr);
+
         ap.add_key_arg("-w", "--wildcard")
-                .description("Filter files using the specified wildcard pattern. Only the '*' "
-                             "and '?' characters are supported.")
-                .store_presence(prog_args.wildcrd);
+                .description("Enforce the wildcard filter. Only * and ? characters are supported.")
+                .store_presence(prog_args.force_wildcrd);
 
         ap.add_key_arg("-x", "--regex")
-                .description("Filter files using the specified regex.")
-                .store_presence(prog_args.regx);
+                .description("Enforce the regex filter.")
+                .store_presence(prog_args.force_regx);
 
-        ap.add_key_arg("-s", "--case-sensitive")
+        ap.add_key_arg("-S", "--case-sensitive")
                 .description("Enable case-sensitive search.")
                 .store_presence(prog_args.case_sensitve);
 
@@ -74,7 +77,10 @@ int main(int argc, char* argv[])
                 
         ap.add_version_arg("-v", "--version")
                 .description("Output version information and exit.")
-                .gplv3_version_information("0.0.0", "2024", "Killian Valverde");
+                .gplv3_version_information("0.0.0", "2024-2025", "Killian Valverde");
+        
+        ap.add_constraint("-s", "-w", "-x")
+                .mutually_exclusive(true);
         
         ap.parse_args(argc, argv);
         

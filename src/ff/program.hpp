@@ -49,17 +49,23 @@ public:
     int execute();
 
 private:
+    bool is_wildcard(const std::string& str) const noexcept;
+    
+    bool is_regex(const std::string& str) const noexcept;
+    
     void print_path(const std::filesystem::path& actual_pth) const;
     
-    void print_path_with_highlighted_substring_match(const std::filesystem::path& pth) const;
+    void print_path_with_highlighted_substring(const std::filesystem::path& pth) const;
     
-    void print_path_with_highlighted_wildcard_match(const std::filesystem::path& pth) const;
+    void print_path_with_highlighted_file_name(const std::filesystem::path& pth) const;
     
     void print_path_with_highlighted_regex_match(const std::filesystem::path& pth) const;
 
 private:
     /** The program arguments. */
     program_args prog_args_;
+    
+    bool colorize_file_nme_ = false;
 };
 
 }
