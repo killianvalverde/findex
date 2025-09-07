@@ -7,6 +7,6 @@ set(MAIN_SOURCE_FILES
 )
 
 add_executable(main ${MAIN_SOURCE_FILES})
-target_link_libraries(main findex speed::speed)
+target_link_libraries(main ff speed::speed)
 install(TARGETS main DESTINATION bin)
-set_target_properties(main PROPERTIES OUTPUT_NAME findex${debug_suffix})
+set_target_properties(main PROPERTIES OUTPUT_NAME ff${debug_suffix})

@@ -1,1 +1,1 @@
-add_subdirectory(findex_test)
+add_subdirectory(ff_test)

@@ -1,4 +1,4 @@
-# findex
+# ff
 
 ## Table of Contents
 - [Introduction](#introduction)
@@ -15,7 +15,7 @@ Search for files that match specified criteria.
 ## Documentation
 
 To access the help menu of this software in order to know all the available options and commands, 
-simply run `findex --help` in a terminal after installing it.
+simply run `ff --help` in a terminal after installing it.
 
 If you want to generate __Doxygen__ documentation, you can use the `doxygen Doxyfile` command, and 
 the results will be placed in the `./docs` directory.

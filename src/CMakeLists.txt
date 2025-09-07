@@ -1,2 +1,2 @@
-add_subdirectory(findex)
+add_subdirectory(ff)
 add_subdirectory(main)

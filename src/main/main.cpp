@@ -1,20 +1,20 @@
-/* findex
+/* ff
  * Copyright (C) 2024 Killian Valverde.
  *
- * This file is part of findex.
+ * This file is part of ff.
  *
- * findex is free software: you can redistribute it and/or modify
+ * ff is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
  *
- * findex is distributed in the hope that it will be useful,
+ * ff is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with findex. If not, see <http://www.gnu.org/licenses/>.
+ * along with ff. If not, see <http://www.gnu.org/licenses/>.
  */
 
 /**
@@ -27,14 +27,14 @@
 #define SPEED_CROSSPLATFORM_UNICODE_MAIN
 #include <speed/speed.hpp>
 
-#include "../findex/findex.hpp"
+#include "../ff/ff.hpp"
 
 int main(int argc, char* argv[])
 {
     try
     {
-        findex::program_args prog_args;
-        spd::ap::arg_parser ap("findex");
+        ff::program_args prog_args;
+        spd::ap::arg_parser ap("ff");
         
         ap.add_help_menu()
                 .description("Search for files that match specified criteria.");
@@ -78,15 +78,15 @@ int main(int argc, char* argv[])
         
         ap.parse_args(argc, argv);
         
-        findex::program prog(std::move(prog_args));
+        ff::program prog(std::move(prog_args));
         return prog.execute();
     }
     catch (const std::exception& e)
     {
-        spd::ios::print_error_and_exit(std::cerr, "findex", e.what(), 1);
+        spd::ios::print_error_and_exit(std::cerr, "ff", e.what(), 1);
     }
     catch (...)
     {
-        spd::ios::print_error_and_exit(std::cerr, "findex", "Unknown error", 1);
+        spd::ios::print_error_and_exit(std::cerr, "ff", "Unknown error", 1);
     }
 }

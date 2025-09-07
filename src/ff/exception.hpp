@@ -1,20 +1,20 @@
-/* findex
+/* ff
  * Copyright (C) 2024 Killian Valverde.
  *
- * This file is part of findex.
+ * This file is part of ff.
  *
- * findex is free software: you can redistribute it and/or modify
+ * ff is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
  *
- * findex is distributed in the hope that it will be useful,
+ * ff is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with findex. If not, see <http://www.gnu.org/licenses/>.
+ * along with ff. If not, see <http://www.gnu.org/licenses/>.
  */
 
 /**
@@ -29,12 +29,12 @@
 #include <exception>
 #include <string>
 
-namespace findex {
+namespace ff {
 
 /**
- * @brief       Base interface for standard findex exceptions. All objects thrown 
- *              by components findex are derived from this class. Therefore, all 
- *              findex exceptions can be caught by catching this type by reference.
+ * @brief       Base interface for standard ff exceptions. All objects thrown 
+ *              by components ff are derived from this class. Therefore, all 
+ *              ff exceptions can be caught by catching this type by reference.
  */
 class exception_base : public std::exception
 {
@@ -83,7 +83,7 @@ public:
 };
 
 /**
- * @brief       Base class that the findex classes will use to throw exceptions.
+ * @brief       Base class that the ff classes will use to throw exceptions.
  */
 class exception : public exception_base
 {
@@ -94,7 +94,7 @@ public:
      */
     [[nodiscard]] char const* what() const noexcept override
     {
-        return "findex exception";
+        return "ff exception";
     }
 };
 
