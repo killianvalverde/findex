@@ -37,13 +37,26 @@ int main(int argc, char* argv[])
         spd::ap::arg_parser ap("ff");
         
         ap.add_help_menu()
-                .description("Search for files that match specified criteria.");
+                .description("Search for files matching the specified pattern. \n\n"
+                        "ff automatically detects the type of pattern you want to use. "
+                        "The detection works as follows: if the pattern starts with * and "
+                        "ends with ^, it is interpreted as a regular expression. If that is "
+                        "not the case and the pattern contains a wildcard operator, it is "
+                        "interpreted as a wildcard. Otherwise, it is treated as a simple "
+                        "substring. You can enforce a specific interpretation using the "
+                        "arguments described in the options section.")
+                .epilogue("Examples:\n"
+                        "  ff \"main\"           Search for files containing \"main\" in "
+                        "current directory\n"
+                        "  ff \"*.cpp\" src/     Search for .cpp files in 'src' directory\n"
+                        "  ff \"^test[0-9]+$\"   Search using regex for files like test1, "
+                        "test23, etc.");
 
-        ap.add_positional_arg("SUB-STRING")
-                .description("Sub-string to search in the file names.")
+        ap.add_positional_arg("PATTERN")
+                .description("Pattern which filenames must match in order to be displayed")
                 .store_into(prog_args.str);
 
-        ap.add_positional_arg("DIR")
+        ap.add_positional_arg("DIRECTORY")
                 .description("Directory in which perform the operation.")
                 .store_into(prog_args.dir_pth)
                 .mandatory(false);
@@ -53,7 +66,7 @@ int main(int argc, char* argv[])
                 .store_presence(prog_args.force_substr);
 
         ap.add_key_arg("-w", "--wildcard")
-                .description("Enforce the wildcard filter. Only * and ? characters are supported.")
+                .description("Enforce the wildcard filter (supports * and ?).")
                 .store_presence(prog_args.force_wildcrd);
 
         ap.add_key_arg("-x", "--regex")
@@ -65,11 +78,11 @@ int main(int argc, char* argv[])
                 .store_presence(prog_args.case_sensitve);
 
         ap.add_key_arg("-a", "--absolute-path")
-                .description("Print the absolute path of the matching files.")
+                .description("Print absolute path of matching files.")
                 .store_presence(prog_args.print_absolute_pth);
 
         ap.add_key_arg("-n", "--no-colors")
-                .description("Disable color output in print statements.")
+                .description("Disable color output.")
                 .store_presence(prog_args.no_colrs);
                 
         ap.add_help_arg("-h", "--help")
