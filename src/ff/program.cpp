@@ -38,7 +38,8 @@ program::program(program_args&& prog_args)
 int program::execute()
 {
     auto directory_iteratn = spd::fsys::directory_iteration(prog_args_.dir_pth)
-            .case_insensitive(!prog_args_.case_sensitve);
+            .case_insensitive(!prog_args_.case_sensitve)
+            .absolute(prog_args_.print_absolute_pth);
     
     if (prog_args_.force_substr)
     {
@@ -66,14 +67,7 @@ int program::execute()
     
     for (auto& pth : directory_iteratn)
     {
-        if (prog_args_.print_absolute_pth)
-        {
-            print_path(std::filesystem::absolute(pth));
-        }
-        else
-        {
-            print_path(pth);
-        }
+        print_path(pth);
     }
     
     std::flush(std::cout);
