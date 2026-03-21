@@ -30,8 +30,8 @@
 
 namespace ff {
 
-program::program(program_args&& prog_args)
-        : prog_args_(std::move(prog_args))
+program::program(program_args& prog_args)
+        : prog_args_(prog_args)
 {
 }
 
@@ -64,6 +64,11 @@ int program::execute()
     {
         directory_iteratn.substring_to_match(prog_args_.str);
     }
+
+    if (!prog_args_.case_sensitve && !prog_args_.no_colrs && !colorize_file_nme_)
+    {
+        spd::str::to_lower_inplace(prog_args_.str);
+    }
     
     for (auto& pth : directory_iteratn)
     {
@@ -89,14 +94,14 @@ bool program::is_regex(const std::string& str) const noexcept
         return false;
     }
     
-    return str.at(0) == '^' && str.at(str.length() - 1) == '$';
+    return str.front() == '^' && str.back() == '$';
 }
 
 void program::print_path(const std::filesystem::path& pth) const
 {
     if (prog_args_.no_colrs)
     {
-        std::cout << spd::cast::type_cast<std::string>(pth) << std::endl;
+        std::cout << spd::cast::to_utf8(pth) << std::endl;
     }
     else if (colorize_file_nme_)
     {
@@ -108,49 +113,48 @@ void program::print_path(const std::filesystem::path& pth) const
     }
 }
 
-void program::print_path_with_highlighted_substring(const std::filesystem::path &pth) const
+void program::print_path_with_highlighted_file_name(const std::filesystem::path& pth) const
 {
-    auto raw_filenme = spd::cast::type_cast<std::string>(pth.filename());
-    std::string filenme;
-    std::string sub_str;
+    std::cout << spd::cast::to_utf8(pth.parent_path())
+            << SPEED_PATH_SEPARATOR_CHAR
+            << spd::ios::set_light_red_text
+            << spd::cast::to_utf8(pth.filename())
+            << spd::ios::set_default_text
+            << spd::ios::newl;
+}
+
+void program::print_path_with_highlighted_substring(const std::filesystem::path& pth) const
+{
+    std::string raw_filenme = spd::cast::to_utf8(pth.filename());
+    std::string filename;
+    std::string_view raw_filenme_view;
     size_t match_pos;
     size_t cur_pos = 0;
-    
+
     if (!prog_args_.case_sensitve)
     {
-        filenme = spd::str::to_lower(raw_filenme);
-        sub_str = spd::str::to_lower(prog_args_.str);
+        filename = spd::str::to_lower(raw_filenme);
+        raw_filenme_view = raw_filenme;
     }
     else
     {
-        filenme = raw_filenme;
-        sub_str = prog_args_.str;
+        filename = std::move(raw_filenme);
+        raw_filenme_view = filename;
     }
-    
-    std::cout << spd::cast::type_cast<std::string>(pth.parent_path())
-              << SPEED_PATH_SEPARATOR_CHAR;
-    
-    while ((match_pos = filenme.find(sub_str, cur_pos)) != std::string::npos)
-    {
-        std::cout << raw_filenme.substr(cur_pos, match_pos - cur_pos)
-                  << spd::ios::set_light_red_text
-                  << raw_filenme.substr(match_pos, sub_str.length())
-                  << spd::ios::set_default_text;
-        
-        cur_pos = match_pos + sub_str.length();
-    }
-    
-    std::cout << raw_filenme.substr(cur_pos) << std::endl;
-}
 
-void program::print_path_with_highlighted_file_name(const std::filesystem::path &pth) const
-{
-    std::cout << spd::cast::type_cast<std::string>(pth.parent_path())
-              << SPEED_PATH_SEPARATOR_CHAR
-              << spd::ios::set_light_red_text
-              << spd::cast::type_cast<std::string>(pth.filename())
-              << spd::ios::set_default_text
-              << spd::ios::newl;
+    std::cout << spd::cast::to_utf8(pth.parent_path()) << SPEED_PATH_SEPARATOR_CHAR;
+
+    while ((match_pos = filename.find(prog_args_.str, cur_pos)) != std::string::npos)
+    {
+        std::cout << raw_filenme_view.substr(cur_pos, match_pos - cur_pos)
+                  << spd::ios::set_light_red_text
+                  << raw_filenme_view.substr(match_pos, prog_args_.str.length())
+                  << spd::ios::set_default_text;
+
+        cur_pos = match_pos + prog_args_.str.length();
+    }
+
+    std::cout << raw_filenme_view.substr(cur_pos) << std::endl;
 }
 
 }

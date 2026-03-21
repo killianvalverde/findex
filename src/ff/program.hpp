@@ -40,7 +40,7 @@ public:
      * @brief       Constructor with parameters.
      * @param       prog_args : The program arguments.
      */
-    explicit program(program_args&& prog_args);
+    explicit program(program_args& prog_args);
     
     /**
      * @brief       Execute the program.
@@ -49,21 +49,19 @@ public:
     int execute();
 
 private:
-    bool is_wildcard(const std::string& str) const noexcept;
+    [[nodiscard]] bool is_wildcard(const std::string& str) const noexcept;
     
-    bool is_regex(const std::string& str) const noexcept;
+    [[nodiscard]] bool is_regex(const std::string& str) const noexcept;
     
     void print_path(const std::filesystem::path& actual_pth) const;
-    
-    void print_path_with_highlighted_substring(const std::filesystem::path& pth) const;
-    
+
     void print_path_with_highlighted_file_name(const std::filesystem::path& pth) const;
-    
-    void print_path_with_highlighted_regex_match(const std::filesystem::path& pth) const;
+
+    void print_path_with_highlighted_substring(const std::filesystem::path& pth) const;
 
 private:
     /** The program arguments. */
-    program_args prog_args_;
+    program_args& prog_args_;
     
     bool colorize_file_nme_ = false;
 };

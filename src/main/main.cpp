@@ -18,7 +18,7 @@
  */
 
 /**
- * @file        main.hpp
+ * @file        main.cpp
  * @brief       main entry point.
  * @author      Killian Valverde
  * @date        2024/11/07
@@ -97,7 +97,7 @@ int main(int argc, char* argv[])
         
         ap.parse_args(argc, argv);
         
-        ff::program prog(std::move(prog_args));
+        ff::program prog(prog_args);
         return prog.execute();
     }
     catch (const std::exception& e)
