@@ -32,8 +32,7 @@ TEST(ff_program, execute)
 {
     int ret = -1;
     ff::program_args prog_args;
-    
-    ff::program prog(std::move(prog_args));
+    ff::program prog(prog_args);
     
     EXPECT_NO_THROW(ret = prog.execute());
     EXPECT_TRUE(ret == 0);
