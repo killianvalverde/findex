@@ -77,9 +77,9 @@ int main(int argc, char* argv[])
                 .description("Enable case-sensitive search.")
                 .store_presence(prog_args.case_sensitve);
 
-        ap.add_key_arg("-a", "--absolute-path")
-                .description("Print absolute path of matching files.")
-                .store_presence(prog_args.print_absolute_pth);
+        ap.add_key_arg("-r", "--relative-path")
+                .description("Print relative path of matching files.")
+                .store_presence(prog_args.print_relative_pth);
 
         ap.add_key_arg("-n", "--no-colors")
                 .description("Disable color output.")

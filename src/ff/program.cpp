@@ -39,7 +39,7 @@ int program::execute()
 {
     auto directory_iteratn = spd::fsys::directory_iteration(prog_args_.dir_pth)
             .case_insensitive(!prog_args_.case_sensitve)
-            .absolute(prog_args_.print_absolute_pth);
+            .absolute(!prog_args_.print_relative_pth);
     
     if (prog_args_.force_substr)
     {

@@ -41,7 +41,7 @@ struct program_args
     bool force_wildcrd;
     bool force_regx;
     bool case_sensitve;
-    bool print_absolute_pth;
+    bool print_relative_pth;
     bool no_colrs;
 };
 
