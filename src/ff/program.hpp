@@ -33,6 +33,9 @@
  */
 namespace ff {
 
+/**
+ * @brief       ff entry point class.
+ */
 class program
 {
 public:
