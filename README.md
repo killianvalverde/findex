@@ -40,13 +40,17 @@ To compile this software, you must have the following tools and libraries instal
 
 ## Build
 
-Use the following commands to build the __CMake__ project:
+Follow these steps to build the project:
 
-1. Create a directory to hold the build output and generate the native build scripts:
+1. __Clone__ the repository and enter the project directory:
+
+       git clone --recursive https://github.com/killianvalverde/ff.git && cd ff
+
+2. Generate the build system using __CMake__:
 
        cmake -S . -B cmake-build-release -DCMAKE_BUILD_TYPE=Release
 
-2. Compile the project directly from __CMake__ using the native build scripts:
+3. __Compile__ the project:
 
        cmake --build cmake-build-release --config Release
 
