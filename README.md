@@ -10,7 +10,8 @@
 
 ## Introduction
 
-Search for files that match specified criteria.
+__ff__ is a high-performance single-core file searcher that is up to 2× faster than __POSIX__ 
+`find` and __PowerShell__ `Get-ChildItem` in most scenarios.
 
 ## Documentation
 
