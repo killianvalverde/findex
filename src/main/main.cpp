@@ -90,7 +90,7 @@ int main(int argc, char* argv[])
                 
         ap.add_version_arg("-v", "--version")
                 .description("Output version information and exit.")
-                .gplv3_version_information("0.0.0", "2024-2025", "Killian Valverde");
+                .gplv3_version_information("0.0.0", "2024-2026", "Killian Valverde");
         
         ap.add_constraint("-s", "-w", "-x")
                 .mutually_exclusive(true);
