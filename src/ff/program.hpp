@@ -56,11 +56,15 @@ private:
     
     [[nodiscard]] bool is_regex(const std::string& str) const noexcept;
     
-    void print_path(const std::filesystem::path& actual_pth) const;
+    void print_path(const spd::fsys::directory_iteration::directory_entity& directory_ent) const;
 
-    void print_path_with_highlighted_file_name(const std::filesystem::path& pth) const;
+    void print_path_with_highlighted_file_name(
+            const spd::fsys::directory_iteration::directory_entity& directory_ent
+    ) const;
 
-    void print_path_with_highlighted_substring(const std::filesystem::path& pth) const;
+    void print_path_with_highlighted_substring(
+            const spd::fsys::directory_iteration::directory_entity& directory_ent
+    ) const;
 
 private:
     /** The program arguments. */

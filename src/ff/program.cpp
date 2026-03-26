@@ -70,9 +70,9 @@ int program::execute()
         spd::str::to_lower_inplace(prog_args_.str);
     }
     
-    for (auto& pth : directory_iteratn)
+    for (auto& directory_ent : directory_iteratn)
     {
-        print_path(pth);
+        print_path(directory_ent);
     }
     
     std::flush(std::cout);
@@ -97,39 +97,64 @@ bool program::is_regex(const std::string& str) const noexcept
     return str.front() == '^' && str.back() == '$';
 }
 
-void program::print_path(const std::filesystem::path& pth) const
+void program::print_path(const spd::fsys::directory_iteration::directory_entity& directory_ent) const
 {
     if (prog_args_.no_colrs)
     {
-        std::cout << spd::cast::to_utf8(pth) << std::endl;
+        std::cout << directory_ent.get_utf8_path() << std::endl;
     }
     else if (colorize_file_nme_)
     {
-        print_path_with_highlighted_file_name(pth);
+        print_path_with_highlighted_file_name(directory_ent);
     }
     else
     {
-        print_path_with_highlighted_substring(pth);
+        print_path_with_highlighted_substring(directory_ent);
     }
 }
 
-void program::print_path_with_highlighted_file_name(const std::filesystem::path& pth) const
+void program::print_path_with_highlighted_file_name(
+        const spd::fsys::directory_iteration::directory_entity& directory_ent) const
 {
-    std::cout << spd::cast::to_utf8(pth.parent_path())
-            << SPEED_PATH_SEPARATOR_CHAR
-            << spd::ios::set_light_red_text
-            << spd::cast::to_utf8(pth.filename())
+    std::cout << spd::ios::set_cyan_text
+            << directory_ent.get_utf8_parent_path()
+            << SPEED_PATH_SEPARATOR_CHAR;
+
+    if (directory_ent.is_directory())
+    {
+        std::cout << spd::ios::set_brown_text;
+    }
+    else
+    {
+        std::cout << spd::ios::set_default_text;
+    }
+
+    std::cout << directory_ent.get_utf8_filename()
             << spd::ios::set_default_text
             << spd::ios::newl;
 }
 
-void program::print_path_with_highlighted_substring(const std::filesystem::path& pth) const
+void program::print_path_with_highlighted_substring(
+        const spd::fsys::directory_iteration::directory_entity& directory_ent) const
 {
-    std::string raw_filenme = spd::cast::to_utf8(pth.filename());
+    std::string raw_filenme = directory_ent.get_utf8_filename();
     std::string filename;
     std::string_view raw_filenme_view;
     size_t match_pos;
     size_t cur_pos = 0;
+    bool is_directory = directory_ent.is_directory();
+
+    auto use_filename_color = [&is_directory]()
+    {
+        if (is_directory)
+        {
+            std::cout << spd::ios::set_brown_text;
+        }
+        else
+        {
+            std::cout << spd::ios::set_default_text;
+        }
+    };
 
     if (!prog_args_.case_sensitve)
     {
@@ -142,19 +167,24 @@ void program::print_path_with_highlighted_substring(const std::filesystem::path&
         raw_filenme_view = filename;
     }
 
-    std::cout << spd::cast::to_utf8(pth.parent_path()) << SPEED_PATH_SEPARATOR_CHAR;
+    std::cout << spd::ios::set_cyan_text
+            << directory_ent.get_utf8_parent_path()
+            << SPEED_PATH_SEPARATOR_CHAR;
 
     while ((match_pos = filename.find(prog_args_.str, cur_pos)) != std::string::npos)
     {
+        use_filename_color();
         std::cout << raw_filenme_view.substr(cur_pos, match_pos - cur_pos)
-                  << spd::ios::set_light_red_text
-                  << raw_filenme_view.substr(match_pos, prog_args_.str.length())
-                  << spd::ios::set_default_text;
+                << spd::ios::set_light_red_text
+                << raw_filenme_view.substr(match_pos, prog_args_.str.length());
 
         cur_pos = match_pos + prog_args_.str.length();
     }
 
-    std::cout << raw_filenme_view.substr(cur_pos) << std::endl;
+    use_filename_color();
+    std::cout << raw_filenme_view.substr(cur_pos)
+            << spd::ios::set_default_text
+            << std::endl;
 }
 
 }
