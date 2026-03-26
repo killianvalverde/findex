@@ -8,8 +8,6 @@ FetchContent_Declare(
 
 FetchContent_MakeAvailable(speed)
 
-set(debug_suffix "$<IF:$<CONFIG:Debug>,d,>")
-
 set(FF_SOURCE_FILES
         exception.hpp
         program.cpp
@@ -19,5 +17,9 @@ set(FF_SOURCE_FILES
 )
 
 add_library(ff STATIC ${FF_SOURCE_FILES})
+
+set_target_properties(ff PROPERTIES OUTPUT_NAME "ff$<IF:$<CONFIG:Debug>,d,>")
+
 target_link_libraries(ff PUBLIC speed)
-set_target_properties(ff PROPERTIES OUTPUT_NAME ff${debug_suffix})
+
+target_include_directories(ff PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/..)
