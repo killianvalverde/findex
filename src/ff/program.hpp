@@ -26,6 +26,8 @@
 
 #pragma once
 
+#include <speed/speed.hpp>
+
 #include "program_args.hpp"
 
 /**

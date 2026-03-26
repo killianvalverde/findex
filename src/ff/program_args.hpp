@@ -35,7 +35,7 @@ namespace ff {
  */
 struct program_args
 {
-    spd::fsys::rx_directory_path dir_pth = ".";
+    spd::fsys::rx_directory_path dir_pth{"."};
     std::string str;
     bool force_substr;
     bool force_wildcrd;
