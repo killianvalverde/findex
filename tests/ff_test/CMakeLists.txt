@@ -1,12 +1,14 @@
-find_package(GTest REQUIRED)
+add_executable(ff_test)
 
-set(FF_TEST_SOURCE_FILES
+target_sources(ff_test PRIVATE
+    main.cpp
     program_test.cpp
 )
 
-add_executable(ff_test
-    main.cpp
-    ${FF_TEST_SOURCE_FILES}
-)
+target_link_libraries(ff_test PRIVATE ff::ff GTest::gtest_main)
 
-target_link_libraries(ff_test PRIVATE ff GTest::gtest GTest::gtest_main)
+set_target_properties(ff_test PROPERTIES DEBUG_POSTFIX d)
+
+include(GoogleTest)
+
+gtest_discover_tests(ff_test DISCOVERY_TIMEOUT 30)

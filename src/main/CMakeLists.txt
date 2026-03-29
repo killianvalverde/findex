@@ -1,11 +1,11 @@
-set(MAIN_SOURCE_FILES
+add_executable(main)
+
+target_sources(main PRIVATE
     main.cpp
 )
 
-add_executable(main ${MAIN_SOURCE_FILES})
+target_link_libraries(main PRIVATE ff::ff)
 
-set_target_properties(main PROPERTIES OUTPUT_NAME "ff$<IF:$<CONFIG:Debug>,d,>")
+set_target_properties(main PROPERTIES DEBUG_POSTFIX d OUTPUT_NAME ff)
 
-target_link_libraries(main PRIVATE ff)
-
-install(TARGETS main DESTINATION bin)
+install(TARGETS main RUNTIME DESTINATION bin)
