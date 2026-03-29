@@ -40,7 +40,7 @@ struct program_args
     bool force_substr;
     bool force_wildcrd;
     bool force_regx;
-    bool case_sensitve;
+    bool case_sens;
     bool print_relative_pth;
     bool no_colrs;
 };

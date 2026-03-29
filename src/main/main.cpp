@@ -27,7 +27,7 @@
 #define SPEED_CROSSPLATFORM_UNICODE_MAIN
 #include <speed/speed.hpp>
 
-#include "../ff/ff.hpp"
+#include "ff/ff.hpp"
 
 int main(int argc, char* argv[])
 {
@@ -75,7 +75,7 @@ int main(int argc, char* argv[])
 
         ap.add_key_arg("-S", "--case-sensitive")
                 .description("Enable case-sensitive search.")
-                .store_presence(prog_args.case_sensitve);
+                .store_presence(prog_args.case_sens);
 
         ap.add_key_arg("-r", "--relative-path")
                 .description("Print relative path of matching files.")

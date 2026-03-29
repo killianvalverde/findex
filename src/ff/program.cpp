@@ -26,8 +26,6 @@
 
 #include "program.hpp"
 
-#include <speed/speed.hpp>
-
 namespace ff {
 
 program::program(program_args& prog_args)
@@ -37,40 +35,40 @@ program::program(program_args& prog_args)
 
 int program::execute()
 {
-    auto directory_iteratn = spd::fsys::directory_iteration(prog_args_.dir_pth)
-            .case_insensitive(!prog_args_.case_sensitve)
+    auto directory_iter = spd::fsys::directory_iteration(prog_args_.dir_pth)
+            .case_insensitive(!prog_args_.case_sens)
             .absolute(!prog_args_.print_relative_pth);
     
     if (prog_args_.force_substr)
     {
-        directory_iteratn.substring_to_match(prog_args_.str);
+        directory_iter.substring_to_match(prog_args_.str);
     }
     else if (prog_args_.force_wildcrd)
     {
-        directory_iteratn.wildcard_to_match(prog_args_.str);
+        directory_iter.wildcard_to_match(prog_args_.str);
         colorize_file_nme_ = true;
     }
     else if (prog_args_.force_regx || is_regex(prog_args_.str))
     {
-        directory_iteratn.regex_to_match(prog_args_.str);
+        directory_iter.regex_to_match(prog_args_.str);
         colorize_file_nme_ = true;
     }
     else if (is_wildcard(prog_args_.str))
     {
-        directory_iteratn.wildcard_to_match(prog_args_.str);
+        directory_iter.wildcard_to_match(prog_args_.str);
         colorize_file_nme_ = true;
     }
     else
     {
-        directory_iteratn.substring_to_match(prog_args_.str);
+        directory_iter.substring_to_match(prog_args_.str);
     }
 
-    if (!prog_args_.case_sensitve && !prog_args_.no_colrs && !colorize_file_nme_)
+    if (!prog_args_.case_sens && !prog_args_.no_colrs && !colorize_file_nme_)
     {
         spd::str::to_lower_inplace(prog_args_.str);
     }
     
-    for (auto& directory_ent : directory_iteratn)
+    for (auto& directory_ent : directory_iter)
     {
         print_path(directory_ent);
     }
@@ -97,7 +95,9 @@ bool program::is_regex(const std::string& str) const noexcept
     return str.front() == '^' && str.back() == '$';
 }
 
-void program::print_path(const spd::fsys::directory_iteration::directory_entity& directory_ent) const
+void program::print_path(
+        const spd::fsys::directory_iteration::directory_entity& directory_ent
+) const
 {
     if (prog_args_.no_colrs)
     {
@@ -114,7 +114,8 @@ void program::print_path(const spd::fsys::directory_iteration::directory_entity&
 }
 
 void program::print_path_with_highlighted_file_name(
-        const spd::fsys::directory_iteration::directory_entity& directory_ent) const
+        const spd::fsys::directory_iteration::directory_entity& directory_ent
+) const
 {
     std::cout << spd::ios::set_cyan_text
             << directory_ent.get_utf8_parent_path()
@@ -135,7 +136,8 @@ void program::print_path_with_highlighted_file_name(
 }
 
 void program::print_path_with_highlighted_substring(
-        const spd::fsys::directory_iteration::directory_entity& directory_ent) const
+        const spd::fsys::directory_iteration::directory_entity& directory_ent
+) const
 {
     std::string raw_filenme = directory_ent.get_utf8_filename();
     std::string filename;
@@ -156,7 +158,7 @@ void program::print_path_with_highlighted_substring(
         }
     };
 
-    if (!prog_args_.case_sensitve)
+    if (!prog_args_.case_sens)
     {
         filename = spd::str::to_lower(raw_filenme);
         raw_filenme_view = raw_filenme;
