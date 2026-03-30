@@ -38,30 +38,10 @@ int program::execute()
     auto directory_iter = spd::fsys::directory_iteration(prog_args_.dir_pth)
             .case_insensitive(!prog_args_.case_sens)
             .absolute(!prog_args_.print_relative_pth);
-    
-    if (prog_args_.force_substr)
-    {
-        directory_iter.substring_to_match(prog_args_.str);
-    }
-    else if (prog_args_.force_wildcrd)
-    {
-        directory_iter.wildcard_to_match(prog_args_.str);
-        colorize_file_nme_ = true;
-    }
-    else if (prog_args_.force_regx || is_regex(prog_args_.str))
-    {
-        directory_iter.regex_to_match(prog_args_.str);
-        colorize_file_nme_ = true;
-    }
-    else if (is_wildcard(prog_args_.str))
-    {
-        directory_iter.wildcard_to_match(prog_args_.str);
-        colorize_file_nme_ = true;
-    }
-    else
-    {
-        directory_iter.substring_to_match(prog_args_.str);
-    }
+
+    match_mode match_mod = get_match_mode();
+    apply_match_mode(directory_iter, match_mod);
+    colorize_file_nme_ = (match_mod != match_mode::SUBSTRING);
 
     if (!prog_args_.case_sens && !prog_args_.no_colrs && !colorize_file_nme_)
     {
@@ -75,6 +55,27 @@ int program::execute()
     
     std::flush(std::cout);
     return 0;
+}
+
+void program::apply_match_mode(
+        spd::fsys::directory_iteration& directory_iter,
+        match_mode match_mod
+) const
+{
+    switch (match_mod)
+    {
+    case match_mode::SUBSTRING:
+        directory_iter.substring_to_match(prog_args_.str);
+        break;
+
+    case match_mode::WILDCARD:
+        directory_iter.wildcard_to_match(prog_args_.str);
+        break;
+
+    case match_mode::REGEX:
+        directory_iter.regex_to_match(prog_args_.str);
+        break;
+    }
 }
 
 bool program::is_wildcard(const std::string& str) const noexcept
@@ -93,6 +94,28 @@ bool program::is_regex(const std::string& str) const noexcept
     }
     
     return str.front() == '^' && str.back() == '$';
+}
+
+program::match_mode program::get_match_mode() const noexcept
+{
+    if (prog_args_.force_substr)
+    {
+        return match_mode::SUBSTRING;
+    }
+    if (prog_args_.force_wildcrd)
+    {
+        return match_mode::WILDCARD;
+    }
+    if (prog_args_.force_regx || is_regex(prog_args_.str))
+    {
+        return match_mode::REGEX;
+    }
+    if (is_wildcard(prog_args_.str))
+    {
+        return match_mode::WILDCARD;
+    }
+
+    return match_mode::SUBSTRING;
 }
 
 void program::print_path(
@@ -123,11 +146,11 @@ void program::print_path_with_highlighted_file_name(
 
     if (directory_ent.is_directory())
     {
-        std::cout << spd::ios::set_brown_text;
+        std::cout << spd::ios::set_light_purple_text;
     }
     else
     {
-        std::cout << spd::ios::set_default_text;
+        std::cout << spd::ios::set_light_red_text;
     }
 
     std::cout << directory_ent.get_utf8_filename()
@@ -146,18 +169,6 @@ void program::print_path_with_highlighted_substring(
     size_t cur_pos = 0;
     bool is_directory = directory_ent.is_directory();
 
-    auto use_filename_color = [&is_directory]()
-    {
-        if (is_directory)
-        {
-            std::cout << spd::ios::set_brown_text;
-        }
-        else
-        {
-            std::cout << spd::ios::set_default_text;
-        }
-    };
-
     if (!prog_args_.case_sens)
     {
         filename = spd::str::to_lower(raw_filenme);
@@ -175,17 +186,25 @@ void program::print_path_with_highlighted_substring(
 
     while ((match_pos = filename.find(prog_args_.str, cur_pos)) != std::string::npos)
     {
-        use_filename_color();
-        std::cout << raw_filenme_view.substr(cur_pos, match_pos - cur_pos)
-                << spd::ios::set_light_red_text
-                << raw_filenme_view.substr(match_pos, prog_args_.str.length());
+        std::cout << spd::ios::set_default_text
+                << raw_filenme_view.substr(cur_pos, match_pos - cur_pos);
+
+        if (is_directory)
+        {
+            std::cout << spd::ios::set_light_purple_text;
+        }
+        else
+        {
+            std::cout << spd::ios::set_light_red_text;
+        }
+
+        std::cout << raw_filenme_view.substr(match_pos, prog_args_.str.length());
 
         cur_pos = match_pos + prog_args_.str.length();
     }
 
-    use_filename_color();
-    std::cout << raw_filenme_view.substr(cur_pos)
-            << spd::ios::set_default_text
+    std::cout << spd::ios::set_default_text
+            << raw_filenme_view.substr(cur_pos)
             << std::endl;
 }
 

@@ -30,9 +30,6 @@
 
 #include "program_args.hpp"
 
-/**
- * @brief       Contians all ff resources.
- */
 namespace ff {
 
 /**
@@ -40,6 +37,14 @@ namespace ff {
  */
 class program
 {
+private:
+    enum class match_mode : uint8_t
+    {
+        SUBSTRING,
+        WILDCARD,
+        REGEX
+    };
+
 public:
     /**
      * @brief       Constructor with parameters.
@@ -54,9 +59,16 @@ public:
     int execute();
 
 private:
+    void apply_match_mode(
+            spd::fsys::directory_iteration& directory_iter,
+            match_mode match_mod
+    ) const;
+
     [[nodiscard]] bool is_wildcard(const std::string& str) const noexcept;
     
     [[nodiscard]] bool is_regex(const std::string& str) const noexcept;
+
+    [[nodiscard]] match_mode get_match_mode() const noexcept;
     
     void print_path(const spd::fsys::directory_iteration::directory_entity& directory_ent) const;
 

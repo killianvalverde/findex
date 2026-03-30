@@ -31,6 +31,6 @@
 #include "program_args.hpp"
 
 /**
- * @brief       Contians all ff resources.
+ * @brief       Contains all ff resources.
  */
 namespace ff {}
